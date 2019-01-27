@@ -62,6 +62,15 @@ def yolo_body(inputs, num_anchors, num_classes):
     x = DarknetConv2D(num_anchors * (num_classes + 5), (1, 1))(x)
     return Model(inputs, x)
 
+def yolo9000_body(inputs, num_anchors, num_classes):
+    """Create YOLO_9000 model CNN body in Keras."""
+    
+    darknet = Model(inputs, darknet_body()(inputs))
+
+    conv19 = DarknetConv2D(28269, (1, 1), strides=(1,1), padding='same')(darknet.output)
+    
+    return Model(inputs, conv19)
+
 
 def yolo_head(feats, anchors, num_classes):
     """Convert final layer features to bounding box parameters.
