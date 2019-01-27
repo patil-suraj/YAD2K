@@ -192,7 +192,7 @@ class BatchGenerator(Sequence):
             instance_count += 1
 
         #print(' new batch created', idx)
-        return [x_batch, boxes, detectors_mask, matching_true_boxes]
+        return [x_batch, boxes, detectors_mask, matching_true_boxes],  np.zeros(len(x_batch))
 
     def on_epoch_end(self):
         if self.shuffle: np.random.shuffle(self.images)
