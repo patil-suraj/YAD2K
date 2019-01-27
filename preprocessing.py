@@ -170,7 +170,11 @@ class BatchGenerator(Sequence):
 
         x_batch = np.zeros((r_bound - l_bound, self.config['IMAGE_H'], self.config['IMAGE_W'], 3))
 
-        boxes = self.load_boxes(self.images[l_bound: r_bound])
+        # boxes = self.load_boxes(self.images[l_bound: r_bound])
+        boxes = []
+        for image in self.images[l_bound: r_bound]:
+            boxes.append(self.load_annotation(image))
+        
         boxes = self.process_boxes(boxes)
 
         it = iter(self.config['ANCHORS'])
@@ -180,13 +184,17 @@ class BatchGenerator(Sequence):
         instance_count = 0
         for train_instance in self.images[l_bound:r_bound]:
             # assign input image to x_batch
-            x_batch[instance_count] = self.load_image(train_instance['filename'])
+            print(x_batch[instance_count].shape)
+            img = Image.open(train_instance['filename'])
+            img = np.array(img)
+            print(img.shape)
+            x_batch[instance_count] = np.array(img)
 
             # increase instance counter in current batch
             instance_count += 1
 
         #print(' new batch created', idx)
-        return np.array([x_batch, boxes, detectors_mask, matching_true_boxes])
+        return [x_batch, boxes, detectors_mask, matching_true_boxes]
 
     def on_epoch_end(self):
         if self.shuffle: np.random.shuffle(self.images)
