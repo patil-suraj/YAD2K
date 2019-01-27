@@ -185,7 +185,8 @@ class BatchGenerator(Sequence):
         for train_instance in self.images[l_bound:r_bound]:
             # assign input image to x_batch
             img = Image.open(train_instance['filename'])
-            img = np.array(img)
+            img = np.array(img, dtype='float32')
+            img = img / 255.
             x_batch[instance_count] = np.array(img)
 
             # increase instance counter in current batch
