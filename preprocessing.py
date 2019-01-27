@@ -184,10 +184,8 @@ class BatchGenerator(Sequence):
         instance_count = 0
         for train_instance in self.images[l_bound:r_bound]:
             # assign input image to x_batch
-            print(x_batch[instance_count].shape)
             img = Image.open(train_instance['filename'])
             img = np.array(img)
-            print(img.shape)
             x_batch[instance_count] = np.array(img)
 
             # increase instance counter in current batch
